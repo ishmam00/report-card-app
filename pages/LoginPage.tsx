@@ -9,8 +9,6 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    `;
-
     // Perform client-side validation (you can add more validation rules as needed)
     if (!email.trim() || !password.trim()) {
       setError('Please fill in all fields');

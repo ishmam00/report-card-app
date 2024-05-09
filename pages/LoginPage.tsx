@@ -51,7 +51,7 @@ const LoginPage: React.FC = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="email"
             type="email"
-            placeholder="Email"
+            placeholder="johndoe@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -79,6 +79,9 @@ const LoginPage: React.FC = () => {
           >
             Sign In
           </button>
+          <a href="/SignupPage" className="text-blue-500 hover:text-blue-700">
+            Sign Up
+          </a>
         </div>
       </form>
     </div>

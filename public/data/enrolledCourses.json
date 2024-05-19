@@ -1,0 +1,13 @@
+[
+  {
+    "studentId": 1,
+    "courses": []
+  },
+  {
+    "studentId": 2,
+    "courses": [
+      "Mathematics",
+      "Science"
+    ]
+  }
+]

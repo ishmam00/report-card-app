@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import privateRouter from '@/components/privateRouter';
 
 const SignupPage: React.FC = () => {
   const router = useRouter();
   const [name, setName] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [department, setDepartment] = useState('');
+  const [role, setRole] = useState('');
   const [fatherName, setFatherName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,11 +16,12 @@ const SignupPage: React.FC = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Perform client-side validation (you can add more validation rules as needed)
+    // Perform client-side validation
     if (
       !name.trim() ||
       !contactNumber.trim() ||
       !department.trim() ||
+      !role.trim() ||
       !fatherName.trim() ||
       !email.trim() ||
       !password.trim()
@@ -37,6 +40,7 @@ const SignupPage: React.FC = () => {
         name,
         contactNumber,
         department,
+        role,
         fatherName,
         email,
         password,
@@ -45,7 +49,7 @@ const SignupPage: React.FC = () => {
 
     if (res.ok) {
       // Redirect to dashboard upon successful sign-up
-      router.push('/dashboard');
+      router.push('/LoginPage');
     } else {
       setError('Invalid email or password');
     }
@@ -105,6 +109,22 @@ const SignupPage: React.FC = () => {
             placeholder="Department"
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="department"
+          >
+            Role
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="role"
+            type="text"
+            placeholder="Student or Teacher"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
           />
         </div>
         <div className="mb-4">

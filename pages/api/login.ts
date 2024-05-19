@@ -21,7 +21,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Set user session or token (you'd likely use something like JWT for authentication)
     // For simplicity, let's just return the user's role in the response
-    res.status(200).json({ role: user.role });
+    res.status(200).json({ role: user.role, email: user.email, name: user.name, id: user.id });
   } else {
     res.setHeader('Allow', ['POST']);
     res.status(405).end(`Method ${req.method} Not Allowed`);

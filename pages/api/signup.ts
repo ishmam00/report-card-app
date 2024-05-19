@@ -7,7 +7,7 @@ const usersFilePath = path.resolve(process.cwd(), 'users.json');
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { name, contactNumber, department, fatherName, email, password, role } = req.body;
+    const { name, contactNumber, department, role, fatherName, email, password } = req.body;
 
     // Read existing users' data from the JSON file
     let usersData = [];
@@ -30,10 +30,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       name,
       contactNumber,
       department,
+      role,
       fatherName,
       email,
       password,
-      role,
     };
 
     // Add the new user to the array

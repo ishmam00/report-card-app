@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Mathematics",
+    "description": "Introduction to Mathematics",
+    "instructor": "Prof. John Smith"
+  },
+  {
+    "id": 2,
+    "name": "Science",
+    "description": "Introduction to Science",
+    "instructor": "Prof. Alice Johnson"
+  },
+  {
+    "id": 3,
+    "name": "English",
+    "description": "Introduction to English",
+    "instructor": "Prof. Jane Doe"
+  }
+]

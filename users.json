@@ -1,51 +1,42 @@
 [
   {
     "id": 1,
-    "name": "John Doe",
-    "contactNumber": "1234567890",
-    "department": "Mathematics",
-    "fatherName": "Jason Doe",
-    "email": "johndoe@example.com",
-    "password": "password123",
-    "role": "teacher"
+    "name": "Matthew Perry",
+    "contactNumber": "29482928",
+    "department": "Acting",
+    "role": "Student",
+    "fatherName": "Theo Perry",
+    "email": "matthew123@gmail.com",
+    "password": "1234"
   },
   {
     "id": 2,
-    "name": "Jane Smith",
-    "contactNumber": "0987654321",
-    "department": "English",
-    "fatherName": "Jonah Smith",
-    "email": "janesmith@example.com",
-    "password": "password123",
-    "role": "teacher"
+    "name": "Rebecca",
+    "contactNumber": "29482928",
+    "department": "BBA",
+    "role": "Teacher",
+    "fatherName": "Thomas",
+    "email": "rebecca@gmail.com",
+    "password": "1234"
   },
   {
     "id": 3,
-    "name": "Alice Johnson",
-    "contactNumber": "5555555555",
-    "department": "Science",
-    "fatherName": "Bob Johnson",
-    "email": "alicejohnson@example.com",
-    "password": "password123",
-    "role": "student"
+    "name": "Jon Kabir",
+    "contactNumber": "29482928",
+    "department": "Singing",
+    "role": "Student",
+    "fatherName": "Suman Kabir",
+    "email": "jon@gmail.com",
+    "password": "1234"
   },
   {
     "id": 4,
-    "name": "Bob Brown",
-    "contactNumber": "7777777777",
-    "department": "History",
-    "fatherName": "David Brown",
-    "email": "bobbrown@example.com",
-    "password": "password123",
-    "role": "student"
-  },
-  {
-    "id": 5,
-    "name": "Matthew Perry",
-    "contactNumber": "48293849239",
-    "department": "CSE",
-    "fatherName": "Theo Perry",
-    "email": "mathew123@gmail.com",
-    "password": "12345"
+    "name": "Abel Tesfaye",
+    "contactNumber": "29482928",
+    "department": "Singing",
+    "role": "Teacher",
+    "fatherName": "Lincoln Tesfaye",
+    "email": "abel@gmail.com",
+    "password": "1234"
   }
 ]

@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import privateRouter from '@/components/privateRouter';
+import useCurrentUser from '@/hooks/useCurrentUser';
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isPasswordShow, setPasswordShow] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Perform client-side validation (you can add more validation rules as needed)
+    // Perform client-side validation
     if (!email.trim() || !password.trim()) {
       setError('Please fill in all fields');
       return;
@@ -25,8 +28,14 @@ const LoginPage: React.FC = () => {
     });
 
     if (res.ok) {
-      // Redirect to dashboard upon successful login
-      router.push('/dashboard');
+      // Redirect to student or teacher dashboard based on user's role
+      const { email, role, name, id } = await res.json();
+      localStorage.setItem('user', JSON.stringify({ email, role, name, id }));
+      if (role.toLowerCase() === 'student') {
+        router.push('/StudentDashboard');
+      } else if (role.toLowerCase() === 'teacher') {
+        router.push('/TeacherDashboard');
+      }
     } else {
       setError('Invalid email or password');
     }
@@ -63,14 +72,23 @@ const LoginPage: React.FC = () => {
           >
             Password
           </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            id="password"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="flex">
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              id="password"
+              type={isPasswordShow ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="text-gray-700 ml-2"
+              onClick={() => setPasswordShow(!isPasswordShow)}
+            >
+              Show
+            </button>
+          </div>
         </div>
         <div className="flex items-center justify-between">
           <button

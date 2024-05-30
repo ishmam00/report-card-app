@@ -181,6 +181,12 @@ const SignupPage: React.FC = () => {
           >
             Sign Up
           </button>
+          <span className="ml-4 text-gray-700">
+            Already have an account?{' '}
+            <a href="/LoginPage" className="text-blue-500 hover:text-blue-700">
+              Login
+            </a>
+          </span>
         </div>
       </form>
     </div>

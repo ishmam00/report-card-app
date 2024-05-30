@@ -6,6 +6,8 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     router.push('/LoginPage');
+    // Optionally, reload the page to ensure state updates
+    window.location.reload();
   };
 
   return (

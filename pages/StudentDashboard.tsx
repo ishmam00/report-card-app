@@ -2,33 +2,24 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { Course } from './CourseEnrollment';
+import PrivateRouter from '@/components/privateRouter';
+import convertMarksToGrade from '../utils/convertMarksToGrade';
 
-const StudentDashboard: React.FC = () => {
+interface StudentResult {
+  courseName: string;
+  mark?: number;
+}
+
+const StudentDashboard = () => {
   const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (Object.keys(localStorage).length === 0) {
-      router.push('/LoginPage');
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchEnrolledCourses()
-      .then((enrolledCourses) => {
-        setCourses(enrolledCourses);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching enrolled courses:', error);
-        setLoading(false);
-      });
-  }, []);
+  const [results, setResults] = useState<StudentResult[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const [user] = useCurrentUser();
 
   const fetchEnrolledCourses = async () => {
+    setLoading(true);
     try {
       const userDataString = localStorage.getItem('user');
       if (!userDataString) {
@@ -37,71 +28,140 @@ const StudentDashboard: React.FC = () => {
       const userData = JSON.parse(userDataString);
       const studentId = userData.id;
 
-      const res = await fetch(`/api/enrolledCourses?studentId=${studentId}`); // Replace 'studentId' with the actual student ID
+      const res = await fetch(`/api/enrolledCourses?studentId=${studentId}`);
       if (res.ok) {
-        const data: Course[] = await res.json();
-        setCourses(data); // Assuming the API response has a 'courses' property containing the enrolled courses
+        const data = await res.json();
+        setCourses(data.courses);
       } else {
         throw new Error('Failed to fetch enrolled courses');
       }
     } catch (error) {
-      throw new Error('Failed to fetch enrolled courses');
+      console.error('Error fetching enrolled courses:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchStudentResults = async () => {
+    setLoading(true);
+    try {
+      const userDataString = localStorage.getItem('user');
+      if (!userDataString) {
+        throw new Error('User data not found in localStorage');
+      }
+      const userData = JSON.parse(userDataString);
+      const studentId = userData.id;
+
+      const res = await fetch(`/api/getStudentResults?studentId=${studentId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setResults(data.studentResults);
+      } else {
+        throw new Error('Failed to fetch student results');
+      }
+    } catch (error) {
+      console.error('Error fetching student results:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEnrollment = () => {
-    // Navigate to the CourseEnrollment page
     router.push('/CourseEnrollment');
   };
 
-  const handleShowResult = () => {
-    router.push('/StudentResult');
+  const getGradeForCourse = (courseName: string) => {
+    const result = results.find((r) => r.courseName === courseName);
+    // console.log('Result:', result);
+    if (result && result.mark !== undefined) {
+      return convertMarksToGrade(result.mark);
+    }
+    return 'N/A';
   };
 
-  const handleLogout = () => {
-    // Logout logic
-    localStorage.removeItem('user');
-    router.push('/LoginPage');
-  };
+  useEffect(() => {
+    if (user) {
+      fetchEnrolledCourses();
+      fetchStudentResults();
+    }
+  }, [user]);
+
+  // console.log('Hello World');
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full h-full flex flex-col items-center justify-center">
-        <h1 className="text-gray-700 text-2xl mb-4">Student Dashboard</h1>
-        {loading ? (
-          <p className="text-gray-700">Loading...</p>
-        ) : (
-          <div className="flex items-center justify-center w-full">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={handleEnrollment}
-            >
-              Enroll in Courses
-            </button>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={() => handleShowResult()}
-            >
-              Show Result
-            </button>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          </div>
-        )}
-        <h2 className="text-gray-700 text-lg my-4">Enrolled Courses:</h2>
-        <ul>
-          {courses?.map((course) => (
-            <li key={course.id} className="text-gray-700">
-              {course.name}
-            </li>
-          ))}
-        </ul>
+    <PrivateRouter>
+    <div className="flex h-screen bg-gray-100">
+      {/* Side Panel */}
+      <div className="bg-gray-100 shadow-md w-64 flex flex-col p-4">
+        <h2 className="text-gray-700 text-lg font-bold mb-4">Actions</h2>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 mb-4 rounded focus:outline-none focus:shadow-outline"
+          onClick={handleEnrollment}
+        >
+          Enroll in Courses
+        </button>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col justify-center items-center">
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full h-full">
+          <h1 className="text-gray-700 text-2xl mb-4">Student Dashboard</h1>
+          <h1 className="text-gray-700 text-lg mb-4">
+            Welcome, <strong>{user.name}</strong>
+          </h1>
+          {loading ? (
+            <p className="text-gray-700">Loading...</p>
+          ) : (
+            <>
+              <h2 className="text-gray-700 text-lg my-4">Enrolled Courses:</h2>
+              {courses.length > 0 && courses[0] != null ? (
+                <div className="overflow-x-auto w-full">
+                  <table className="min-w-full bg-white border">
+                    <thead>
+                      <tr>
+                        {Object.keys(courses[0]).map((key) => (
+                          <th
+                            key={key}
+                            className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700"
+                          >
+                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                          </th>
+                        ))}
+                        <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                          Grade
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {courses.map((course, index) => (
+                        <tr key={index}>
+                          {Object.keys(course).map((key) => (
+                            <td
+                              key={key}
+                              className="py-2 px-4 border-b text-gray-700"
+                            >
+                              {course[key as keyof Course]}
+                            </td>
+                          ))}
+                          <td className="py-2 px-4 border-b text-gray-700">
+                            {getGradeForCourse(course.name)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-gray-700">
+                  There are no enrolled courses at the moment.
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
+    </PrivateRouter>
   );
 };
 

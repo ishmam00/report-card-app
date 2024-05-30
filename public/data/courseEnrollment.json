@@ -1,20 +1,44 @@
 {
-  "Mathematics": [
+  "Business": [
     {
-      "name": "Jon Kabir",
-      "id": 3
+      "name": "Michael Thompson",
+      "id": 3,
+      "mark": 80
     }
   ],
-  "Science": [
+  "Computer Science and Engineering": [
     {
-      "name": "Jon Kabir",
+      "name": "Michael Thompson",
+      "id": 3,
+      "mark": 85
+    }
+  ],
+  "Computer Science": [
+    {
+      "name": "Michael Thompson",
       "id": 3
     }
   ],
   "English": [
     {
-      "name": "Jon Kabir",
-      "id": 3
+      "name": "David Rodriguez",
+      "id": 1
+    },
+    {
+      "name": "Fatima Ali",
+      "id": 5
+    }
+  ],
+  "Science": [
+    {
+      "name": "David Rodriguez",
+      "id": 1
+    }
+  ],
+  "Mathematics": [
+    {
+      "name": "Fatima Ali",
+      "id": 5
     }
   ]
 }

@@ -3,18 +3,36 @@
     "id": 1,
     "name": "Mathematics",
     "description": "Introduction to Mathematics",
-    "instructor": "Prof. John Smith"
+    "instructor": "Prof. Terence Tao"
   },
   {
     "id": 2,
     "name": "Science",
     "description": "Introduction to Science",
-    "instructor": "Prof. Alice Johnson"
+    "instructor": "Prof. Albert Johnson"
   },
   {
     "id": 3,
     "name": "English",
     "description": "Introduction to English",
-    "instructor": "Prof. Jane Doe"
+    "instructor": "Prof. Glenda Carpio"
+  },
+  {
+    "id": 4,
+    "name": "Business",
+    "description": "Introduction to Business",
+    "instructor": "Prof. Clayton Christensen"
+  },
+  {
+    "id": 5,
+    "name": "Computer Science and Engineering",
+    "description": "Introduction to Computer Science and Engineering",
+    "instructor": "Prof. Yoshua Bengio"
+  },
+  {
+    "id": 6,
+    "name": "Computer Science",
+    "description": "Introduction to Computer Science",
+    "instructor": "Prof. Andrew Zisserman"
   }
 ]

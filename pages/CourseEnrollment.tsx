@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import useCurrentUser from '@/hooks/useCurrentUser';
-import { idText } from 'typescript';
+import PrivateRouter from '@/components/privateRouter';
 
 export interface Course {
   id: number;
@@ -15,10 +15,14 @@ const CourseEnrollment: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
 
+  const [user] = useCurrentUser();
+
   useEffect(() => {
-    // Fetch available courses
-    fetchAvailableCourses();
-  }, []);
+    if (user) {
+      // Fetch available courses
+      fetchAvailableCourses();
+    }
+  }, [user]);
 
   // const [user] = useCurrentUser();
 
@@ -78,39 +82,53 @@ const CourseEnrollment: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-1/3">
-        <h2 className="text-2xl mb-4">Course Enrollment</h2>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Select Courses
-          </label>
-          {courses.map((course) => (
-            <label key={course.id} className="block text-gray-700">
-              <input
-                type="checkbox"
-                checked={
-                  selectedCourses.findIndex(
-                    (oldCourse) => oldCourse.id === course.id
-                  ) > -1
-                }
-                onChange={() => handleCourseSelection(course)}
-              />
-              {course.name}
-            </label>
-          ))}
-        </div>
-        <div className="flex items-center justify-between">
+    <PrivateRouter>
+      <div className="flex h-screen bg-gray-100">
+        <div className="bg-gray-100 shadow-md w-64 flex flex-col p-4">
+          <h2 className="text-gray-700 text-lg font-bold mb-4">Actions</h2>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button"
-            onClick={handleEnroll}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 mb-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={() => router.push('/StudentDashboard')}
           >
-            Enroll
+            Back to Dashboard
           </button>
         </div>
-      </form>
-    </div>
+
+        <div className="flex-1 justify-center items-center">
+          <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-full w-full">
+            <h2 className="text-2xl mb-4 text-gray-700">Course Enrollment</h2>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Select Courses
+              </label>
+              {courses.map((course) => (
+                <label key={course.id} className="block text-gray-700">
+                  <input
+                    type="checkbox"
+                    checked={
+                      selectedCourses.findIndex(
+                        (oldCourse) => oldCourse.id === course.id
+                      ) > -1
+                    }
+                    onChange={() => handleCourseSelection(course)}
+                  />
+                  {course.name}
+                </label>
+              ))}
+            </div>
+            <div className="flex items-center justify-between">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button"
+                onClick={handleEnroll}
+              >
+                Enroll
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </PrivateRouter>
   );
 };
 

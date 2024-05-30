@@ -3,22 +3,27 @@ import LoginPage from './LoginPage';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import privateRouter from '@/components/privateRouter';
+import PrivateRouter from '@/components/privateRouter';
 
 const Home = () => {
   const router = useRouter();
-  const [user] = useCurrentUser();
+  const [user, isLoading] = useCurrentUser();
 
-  useEffect(() => {
-    if (!user) {
-      router.push('/LoginPage');
-    }
-  }, []);
+  // useEffect(() => {
+  //   console.log(isLoading);
+  //   console.log('User:', user);
+  //   if (!user && !isLoading) {
+  //     console.log('Hello World');
+  //     router.push('/LoginPage');
+  //   }
+  // }, []);
 
   return (
-    <main>
-      <div className="flex justify-center text-gray-700 mb-3">Welcome</div>
-    </main>
+    <PrivateRouter>
+      <main>
+        <div className="flex justify-center text-gray-700 mb-3">Welcome</div>
+      </main>
+    </PrivateRouter>
   );
 };
 

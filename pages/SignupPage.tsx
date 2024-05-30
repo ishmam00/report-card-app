@@ -16,7 +16,7 @@ const SignupPage: React.FC = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Perform client-side validation
+    // Client-side validation
     if (
       !name.trim() ||
       !contactNumber.trim() ||
@@ -30,7 +30,6 @@ const SignupPage: React.FC = () => {
       return;
     }
 
-    // Assuming you have an API endpoint for sign-up, replace the placeholder URL with your actual endpoint
     const res = await fetch('/api/signup', {
       method: 'POST',
       headers: {

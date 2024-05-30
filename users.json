@@ -1,42 +1,112 @@
 [
   {
     "id": 1,
-    "name": "Matthew Perry",
+    "name": "David Rodriguez",
     "contactNumber": "29482928",
-    "department": "Acting",
+    "department": "Computer Science and Engineering",
     "role": "Student",
-    "fatherName": "Theo Perry",
-    "email": "matthew123@gmail.com",
+    "fatherName": "Theo Rodriguez",
+    "email": "davidrodri@gmail.com",
     "password": "1234"
   },
   {
     "id": 2,
-    "name": "Rebecca",
+    "name": "Clayton Christensen",
     "contactNumber": "29482928",
     "department": "BBA",
     "role": "Teacher",
-    "fatherName": "Thomas",
-    "email": "rebecca@gmail.com",
+    "fatherName": "Kevin Christensen",
+    "email": "clayton@gmail.com",
     "password": "1234"
   },
   {
     "id": 3,
-    "name": "Jon Kabir",
+    "name": "Michael Thompson",
     "contactNumber": "29482928",
-    "department": "Singing",
+    "department": "Computer Science",
     "role": "Student",
-    "fatherName": "Suman Kabir",
-    "email": "jon@gmail.com",
+    "fatherName": "Marcus Thompson",
+    "email": "michael@gmail.com",
     "password": "1234"
   },
   {
     "id": 4,
-    "name": "Abel Tesfaye",
+    "name": "Jim Bain",
     "contactNumber": "29482928",
-    "department": "Singing",
+    "department": "EEE",
     "role": "Teacher",
-    "fatherName": "Lincoln Tesfaye",
-    "email": "abel@gmail.com",
+    "fatherName": "Mohammad Bain",
+    "email": "jimbain@gmail.com",
+    "password": "1234"
+  },
+  {
+    "id": 5,
+    "name": "Fatima Ali",
+    "contactNumber": "434343",
+    "department": "Computer Science and Engineering",
+    "role": "Student",
+    "fatherName": "Khaled Ali",
+    "email": "fatima@gmail.com",
+    "password": "1234"
+  },
+  {
+    "id": 6,
+    "name": "Jonathan Cagan",
+    "contactNumber": "01795830583",
+    "department": "Mechanical Engineering",
+    "role": "Teacher",
+    "fatherName": "Carlos Cagan",
+    "email": "jonathan@gmail.com",
+    "password": "1234"
+  },
+  {
+    "id": 7,
+    "name": "Terence Tao",
+    "contactNumber": "017438484",
+    "department": "Mathematics",
+    "role": "Teacher",
+    "fatherName": "John Tao",
+    "email": "terencetao@gmail.com",
+    "password": "1234"
+  },
+  {
+    "id": 8,
+    "name": "Albert Johnson",
+    "contactNumber": "017483483",
+    "department": "Science",
+    "role": "Teacher",
+    "fatherName": "Michael Johnson",
+    "email": "albert@gmail.com",
+    "password": "1234"
+  },
+  {
+    "id": 9,
+    "name": "Glenda Carpio",
+    "contactNumber": "0185738573",
+    "department": "English",
+    "role": "Teacher",
+    "fatherName": "Hoover Carpio",
+    "email": "glenda@gmail.com",
+    "password": "1234"
+  },
+  {
+    "id": 10,
+    "name": "Yoshua Bengio",
+    "contactNumber": "0185738573",
+    "department": "Computer Science and Engineering",
+    "role": "Teacher",
+    "fatherName": "Joshua Bengio",
+    "email": "yoshua@gmail.com",
+    "password": "1234"
+  },
+  {
+    "id": 11,
+    "name": "Andrew Zisserman",
+    "contactNumber": "0185738573",
+    "department": "Computer Science",
+    "role": "Teacher",
+    "fatherName": "Jordan Zisserman",
+    "email": "andrewzi@gmail.com",
     "password": "1234"
   }
 ]

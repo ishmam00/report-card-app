@@ -12,13 +12,12 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Perform client-side validation
+    // Client-side validation
     if (!email.trim() || !password.trim()) {
       setError('Please fill in all fields');
       return;
     }
 
-    // Assuming you have an API endpoint for login, replace the placeholder URL with your actual endpoint
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: {

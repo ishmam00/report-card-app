@@ -7,18 +7,34 @@ const courseEnrollmentFilePath = path.join(process.cwd(), 'public', 'data', 'cou
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
-    const studentName = req.query.studentName as string;
+    const studentId = req.query.studentId as string;
+    // console.log('Student ID:', studentId)
     try {
       // Read course enrollment data
       const data = fs.readFileSync(courseEnrollmentFilePath, 'utf-8');
       const courseEnrollmentData = JSON.parse(data);
 
+      const courseData = fs.readFileSync(path.join(process.cwd(), 'public', 'data', 'availableCourses.json'), 'utf-8');
+      const availableCourses = JSON.parse(courseData);
+
+      const matchingCourses: any[] = []
+
       // Filter courses based on student ID
-      const enrolledCourses = Object.keys(courseEnrollmentData).filter(
-        (course) => courseEnrollmentData[course].includes(studentName)
+      Object.keys(courseEnrollmentData).forEach(
+        (course) => {
+          if (courseEnrollmentData[course].findIndex((student: any) => student.id == studentId) > -1) {
+            const result = availableCourses.find((availableCourse: Course) => availableCourse.name === course);
+            if (result) {
+              matchingCourses.push(result);
+              ;
+            }
+          }
+        }
       );
 
-      res.status(200).json({ courses: enrolledCourses });
+      // console.log('Available courses:', matchingCourses);
+
+      res.status(200).json({ courses: matchingCourses });
     } catch (error) {
       console.error('Error fetching enrolled courses:', error);
       res.status(500).json({ error: 'Failed to fetch enrolled courses' });
@@ -29,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Read current course enrollment data
       const data = fs.readFileSync(courseEnrollmentFilePath, 'utf-8');
       const courseEnrollmentData = JSON.parse(data);
-      console.log(courses, courseEnrollmentData, student);
+      // console.log(courses, courseEnrollmentData, student);
 
       // Add student to course enrollments
       courses.forEach((course: Course) => {

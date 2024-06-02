@@ -20,13 +20,15 @@ const PrivateRouter = ({ children }: { children: React.ReactNode }) => {
       } else {
         {
           if (
-            userData.role == 'Student' &&
-            teacherAccess.includes(router.pathname)
+            (userData.role == 'Student' &&
+              teacherAccess.includes(router.pathname)) ||
+            userData.role == 'Student'
           ) {
             router.push('/StudentDashboard');
           } else if (
-            userData.role == 'Teacher' &&
-            studentAccess.includes(router.pathname)
+            (userData.role == 'Teacher' &&
+              studentAccess.includes(router.pathname)) ||
+            userData.role == 'Teacher'
           ) {
             router.push('/TeacherDashboard');
           }

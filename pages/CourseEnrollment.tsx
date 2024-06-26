@@ -8,27 +8,26 @@ export interface Course {
   name: string;
   description?: string;
   instructor?: string;
+  studentCount?: number;
 }
 
 const CourseEnrollment: React.FC = () => {
   const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
-
+  const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
   const [user] = useCurrentUser();
 
   useEffect(() => {
     if (user) {
-      // Fetch available courses
       fetchAvailableCourses();
+      fetchEnrolledCourses(user.id);
     }
   }, [user]);
 
-  // const [user] = useCurrentUser();
-
   const fetchAvailableCourses = async () => {
     try {
-      const res = await fetch('./data/availableCourses.json');
+      const res = await fetch('/data/availableCourses.json');
       const data: Course[] = await res.json();
       setCourses(data);
     } catch (error) {
@@ -36,10 +35,18 @@ const CourseEnrollment: React.FC = () => {
     }
   };
 
+  const fetchEnrolledCourses = async (studentId: string) => {
+    try {
+      const res = await fetch(`/api/enrolledCourses?studentId=${studentId}`);
+      const data = await res.json();
+      setEnrolledCourses(data.courses);
+    } catch (error) {
+      console.error('Error fetching enrolled courses:', error);
+    }
+  };
+
   const handleCourseSelection = (course: Course) => {
-    if (
-      selectedCourses.findIndex((oldCourse) => oldCourse.id === course.id) > -1
-    ) {
+    if (selectedCourses.find((oldCourse) => oldCourse.id === course.id)) {
       setSelectedCourses(
         selectedCourses.filter((oldCourse) => oldCourse.id !== course.id)
       );
@@ -48,11 +55,8 @@ const CourseEnrollment: React.FC = () => {
     }
   };
 
-  // console.log('Selected Courses: ', selectedCourses);
-
   const handleEnroll = async () => {
     try {
-      // Send a request to update the JSON file with the student's enrollment information
       const userDataString = localStorage.getItem('user');
       if (!userDataString) {
         throw new Error('User data not found in localStorage');
@@ -72,12 +76,42 @@ const CourseEnrollment: React.FC = () => {
 
       if (res.ok) {
         console.log('Enrollment successful');
-        router.push('/StudentDashboard');
+        fetchEnrolledCourses(userData.id); // Refresh enrolled courses
       } else {
         throw new Error('Failed to enroll in courses');
       }
     } catch (error) {
       console.error('Error enrolling in courses:', error);
+    }
+  };
+
+  const handleUnenroll = async (courseName: string) => {
+    try {
+      const userDataString = localStorage.getItem('user');
+      if (!userDataString) {
+        throw new Error('User data not found in localStorage');
+      }
+      const userData = JSON.parse(userDataString);
+
+      const res = await fetch('/api/enrolledCourses', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          course: courseName,
+          studentId: userData.id,
+        }),
+      });
+
+      if (res.ok) {
+        console.log('Unenrollment successful');
+        fetchEnrolledCourses(userData.id); // Refresh enrolled courses
+      } else {
+        throw new Error('Failed to unenroll from course');
+      }
+    } catch (error) {
+      console.error('Error unenrolling from course:', error);
     }
   };
 
@@ -98,27 +132,95 @@ const CourseEnrollment: React.FC = () => {
           <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-full w-full">
             <h2 className="text-2xl mb-4 text-gray-700">Course Enrollment</h2>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Select Courses
-              </label>
-              {courses.map((course) => (
-                <label key={course.id} className="block text-gray-700">
-                  <input
-                    type="checkbox"
-                    checked={
-                      selectedCourses.findIndex(
-                        (oldCourse) => oldCourse.id === course.id
-                      ) > -1
-                    }
-                    onChange={() => handleCourseSelection(course)}
-                  />
-                  {course.name}
-                </label>
-              ))}
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border">
+                  <thead>
+                    <tr>
+                      <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                        Id
+                      </th>
+                      <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                        Name
+                      </th>
+                      <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                        Description
+                      </th>
+                      <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                        Instructor
+                      </th>
+                      <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                        Select
+                      </th>
+                      {enrolledCourses.length > 0 && (
+                        <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                          Unenroll
+                        </th>
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {courses.map((course) => (
+                      <tr key={course.id} className="cursor-pointer">
+                        <td className="py-2 px-4 border-b text-gray-700">
+                          {course.id}
+                        </td>
+                        <td className="py-2 px-4 border-b text-gray-700">
+                          {course.name}
+                        </td>
+                        <td className="py-2 px-4 border-b text-gray-700">
+                          {course.description}
+                        </td>
+                        <td className="py-2 px-4 border-b text-gray-700">
+                          {course.instructor}
+                        </td>
+                        <td className="py-2 px-4 border-b text-gray-700">
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              disabled={enrolledCourses.some(
+                                (enrolledCourse) =>
+                                  enrolledCourse.name === course.name
+                              )}
+                              checked={selectedCourses.some(
+                                (oldCourse) => oldCourse.id === course.id
+                              )}
+                              onChange={() => handleCourseSelection(course)}
+                            />
+                            {enrolledCourses.some(
+                              (enrolledCourse) =>
+                                enrolledCourse.name === course.name
+                            ) && (
+                              <span className="text-red-500 ml-2 whitespace-nowrap">
+                                Already Enrolled
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        {enrolledCourses.length > 0 && (
+                          <td className="py-2 px-4 border-b text-gray-700">
+                            {enrolledCourses.some(
+                              (enrolledCourse) =>
+                                enrolledCourse.name === course.name
+                            ) && (
+                              <button
+                                className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                type="button"
+                                onClick={() => handleUnenroll(course.name)}
+                              >
+                                Unenroll
+                              </button>
+                            )}
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div className="flex items-center justify-between">
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
                 onClick={handleEnroll}
               >

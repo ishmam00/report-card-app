@@ -3,7 +3,7 @@ import path from 'path';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 // Path to the users.json file
-const usersFilePath = path.resolve(process.cwd(), 'users.json');
+const usersFilePath = path.resolve(process.cwd(), 'public', 'data', 'users.json');
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {

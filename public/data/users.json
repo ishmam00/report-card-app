@@ -33,7 +33,7 @@
     "id": 4,
     "name": "Jim Bain",
     "contactNumber": "29482928",
-    "department": "EEE",
+    "department": "Economics",
     "role": "Teacher",
     "fatherName": "Mohammad Bain",
     "email": "jimbain@gmail.com",
@@ -108,5 +108,15 @@
     "fatherName": "Jordan Zisserman",
     "email": "andrewzi@gmail.com",
     "password": "1234"
+  },
+  {
+    "id": 12,
+    "name": "Issac Mays",
+    "contactNumber": "01720038503",
+    "department": "Business",
+    "role": "Student",
+    "fatherName": "Ayaan Mays",
+    "email": "issac@gmail.com",
+    "password": "Password1!"
   }
 ]

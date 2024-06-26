@@ -17,6 +17,9 @@ const CourseEnrollment: React.FC = () => {
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
   const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
   const [user] = useCurrentUser();
+  const [activeTab, setActiveTab] = useState<'enrolled' | 'available'>(
+    'enrolled'
+  );
 
   useEffect(() => {
     if (user) {
@@ -129,9 +132,31 @@ const CourseEnrollment: React.FC = () => {
         </div>
 
         <div className="flex-1 justify-center items-center">
-          <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-full w-full">
+          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-full w-full">
             <h2 className="text-2xl mb-4 text-gray-700">Course Enrollment</h2>
             <div className="mb-4">
+              <div className="flex mb-4">
+                <button
+                  className={`px-4 py-2 rounded-t-lg ${
+                    activeTab === 'enrolled'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 text-gray-700'
+                  }`}
+                  onClick={() => setActiveTab('enrolled')}
+                >
+                  Enrolled Courses
+                </button>
+                <button
+                  className={`px-4 py-2 rounded-t-lg ${
+                    activeTab === 'available'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 text-gray-700'
+                  }`}
+                  onClick={() => setActiveTab('available')}
+                >
+                  More Courses
+                </button>
+              </div>
               <div className="overflow-x-auto">
                 <table className="min-w-full bg-white border">
                   <thead>
@@ -148,10 +173,12 @@ const CourseEnrollment: React.FC = () => {
                       <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
                         Instructor
                       </th>
-                      <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
-                        Select
-                      </th>
-                      {enrolledCourses.length > 0 && (
+                      {activeTab === 'available' && (
+                        <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                          Select
+                        </th>
+                      )}
+                      {activeTab === 'enrolled' && (
                         <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
                           Unenroll
                         </th>
@@ -159,75 +186,84 @@ const CourseEnrollment: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {courses.map((course) => (
-                      <tr key={course.id} className="cursor-pointer">
-                        <td className="py-2 px-4 border-b text-gray-700">
-                          {course.id}
-                        </td>
-                        <td className="py-2 px-4 border-b text-gray-700">
-                          {course.name}
-                        </td>
-                        <td className="py-2 px-4 border-b text-gray-700">
-                          {course.description}
-                        </td>
-                        <td className="py-2 px-4 border-b text-gray-700">
-                          {course.instructor}
-                        </td>
-                        <td className="py-2 px-4 border-b text-gray-700">
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              disabled={enrolledCourses.some(
-                                (enrolledCourse) =>
-                                  enrolledCourse.name === course.name
-                              )}
-                              checked={selectedCourses.some(
-                                (oldCourse) => oldCourse.id === course.id
-                              )}
-                              onChange={() => handleCourseSelection(course)}
-                            />
-                            {enrolledCourses.some(
-                              (enrolledCourse) =>
-                                enrolledCourse.name === course.name
-                            ) && (
-                              <span className="text-red-500 ml-2 whitespace-nowrap">
-                                Already Enrolled
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        {enrolledCourses.length > 0 && (
+                    {activeTab === 'enrolled' &&
+                      enrolledCourses.map((course) => (
+                        <tr key={course.id} className="cursor-pointer">
                           <td className="py-2 px-4 border-b text-gray-700">
-                            {enrolledCourses.some(
+                            {course.id}
+                          </td>
+                          <td className="py-2 px-4 border-b text-gray-700">
+                            {course.name}
+                          </td>
+                          <td className="py-2 px-4 border-b text-gray-700">
+                            {course.description}
+                          </td>
+                          <td className="py-2 px-4 border-b text-gray-700">
+                            {course.instructor}
+                          </td>
+                          <td className="py-2 px-4 border-b text-gray-700">
+                            <button
+                              className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                              type="button"
+                              onClick={() => handleUnenroll(course.name)}
+                            >
+                              Unenroll
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    {activeTab === 'available' &&
+                      courses
+                        .filter(
+                          (course) =>
+                            !enrolledCourses.some(
                               (enrolledCourse) =>
                                 enrolledCourse.name === course.name
-                            ) && (
-                              <button
-                                className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                type="button"
-                                onClick={() => handleUnenroll(course.name)}
-                              >
-                                Unenroll
-                              </button>
-                            )}
-                          </td>
-                        )}
-                      </tr>
-                    ))}
+                            )
+                        )
+                        .map((course) => (
+                          <tr key={course.id} className="cursor-pointer">
+                            <td className="py-2 px-4 border-b text-gray-700">
+                              {course.id}
+                            </td>
+                            <td className="py-2 px-4 border-b text-gray-700">
+                              {course.name}
+                            </td>
+                            <td className="py-2 px-4 border-b text-gray-700">
+                              {course.description}
+                            </td>
+                            <td className="py-2 px-4 border-b text-gray-700">
+                              {course.instructor}
+                            </td>
+                            <td className="py-2 px-4 border-b text-gray-700">
+                              <div className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedCourses.some(
+                                    (oldCourse) => oldCourse.id === course.id
+                                  )}
+                                  onChange={() => handleCourseSelection(course)}
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
                   </tbody>
                 </table>
               </div>
             </div>
-            <div className="flex items-center justify-between">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="button"
-                onClick={handleEnroll}
-              >
-                Enroll
-              </button>
-            </div>
-          </form>
+            {activeTab === 'available' && (
+              <div className="flex items-center justify-between">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  type="button"
+                  onClick={handleEnroll}
+                >
+                  Enroll
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </PrivateRouter>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import privateRouter from '@/components/privateRouter';
+import { ViewIcon, ViewOffIcon } from 'hugeicons-react';
 
 const SignupPage: React.FC = () => {
   const router = useRouter();
@@ -12,6 +13,7 @@ const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isPasswordShow, setPasswordShow] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +29,32 @@ const SignupPage: React.FC = () => {
       !password.trim()
     ) {
       setError('Please fill in all fields');
+      return;
+    }
+
+    // Email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    // Phone number validation
+    const phonePattern = /^01[3-9]\d{8}$/;
+    if (!phonePattern.test(contactNumber)) {
+      setError(
+        'Please enter a valid phone number (11 digits starting with 01)'
+      );
+      return;
+    }
+
+    // Password validation
+    const passwordPattern =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordPattern.test(password)) {
+      setError(
+        'Password must be at least 8 characters long and must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+      );
       return;
     }
 
@@ -47,7 +75,7 @@ const SignupPage: React.FC = () => {
     });
 
     if (res.ok) {
-      // Redirect to dashboard upon successful sign-up
+      // Redirect to login page upon successful sign-up
       router.push('/LoginPage');
     } else {
       setError('Invalid email or password');
@@ -60,7 +88,7 @@ const SignupPage: React.FC = () => {
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-1/3"
         onSubmit={handleSignup}
       >
-        <h2 className="text-2xl mb-4">Sign Up</h2>
+        <h2 className="text-2xl mb-4 text-gray-700">Sign Up</h2>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <div className="mb-4">
           <label
@@ -70,7 +98,7 @@ const SignupPage: React.FC = () => {
             Name
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
             id="name"
             type="text"
             placeholder="Name"
@@ -86,7 +114,7 @@ const SignupPage: React.FC = () => {
             Contact Number
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
             id="contactNumber"
             type="text"
             placeholder="Contact Number"
@@ -102,7 +130,7 @@ const SignupPage: React.FC = () => {
             Department
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
             id="department"
             type="text"
             placeholder="Department"
@@ -118,7 +146,7 @@ const SignupPage: React.FC = () => {
             Role
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
             id="role"
             type="text"
             placeholder="Student or Teacher"
@@ -134,7 +162,7 @@ const SignupPage: React.FC = () => {
             Father's Name
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
             id="fatherName"
             type="text"
             placeholder="Father's Name"
@@ -150,7 +178,7 @@ const SignupPage: React.FC = () => {
             Email
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
             id="email"
             type="email"
             placeholder="Email"
@@ -165,14 +193,23 @@ const SignupPage: React.FC = () => {
           >
             Password
           </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            id="password"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="flex">
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 focus:outline-none focus:shadow-outline"
+              id="password"
+              type={isPasswordShow ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="text-gray-700 ml-2"
+              onClick={() => setPasswordShow(!isPasswordShow)}
+            >
+              {isPasswordShow ? <ViewOffIcon /> : <ViewIcon />}
+            </button>
+          </div>
         </div>
         <div className="flex items-center justify-between">
           <button

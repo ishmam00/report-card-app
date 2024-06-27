@@ -8,7 +8,6 @@ const courseEnrollmentFilePath = path.join(process.cwd(), 'public', 'data', 'cou
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     const studentId = req.query.studentId as string;
-    // console.log('Student ID:', studentId)
     try {
       // Read course enrollment data
       const data = fs.readFileSync(courseEnrollmentFilePath, 'utf-8');
@@ -26,13 +25,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const result = availableCourses.find((availableCourse: Course) => availableCourse.name === course);
             if (result) {
               matchingCourses.push(result);
-              ;
             }
           }
         }
       );
-
-      // console.log('Available courses:', matchingCourses);
 
       res.status(200).json({ courses: matchingCourses });
     } catch (error) {
@@ -45,17 +41,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Read current course enrollment data
       const data = fs.readFileSync(courseEnrollmentFilePath, 'utf-8');
       const courseEnrollmentData = JSON.parse(data);
-      // console.log(courses, courseEnrollmentData, student);
 
       // Add student to course enrollments
       courses.forEach((course: Course) => {
         if (!courseEnrollmentData[course.name]) {
           courseEnrollmentData[course.name] = [student];
         } else {
-          courseEnrollmentData[course.name].push(student);
+          // Prevent duplicate enrollments
+          if (!courseEnrollmentData[course.name].some((enrolledStudent: any) => enrolledStudent.id === student.id)) {
+            courseEnrollmentData[course.name].push(student);
+          }
         }
       });
-      // console.log(courseEnrollmentData)
 
       // Write updated course enrollment data back to the file
       fs.writeFileSync(courseEnrollmentFilePath, JSON.stringify(courseEnrollmentData, null, 2));
@@ -65,8 +62,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('Error enrolling student in courses:', error);
       res.status(500).json({ error: 'Failed to enroll student in courses' });
     }
+  } else if (req.method === 'DELETE') {
+    const { course, studentId } = req.body;
+    try {
+      // Read current course enrollment data
+      const data = fs.readFileSync(courseEnrollmentFilePath, 'utf-8');
+      const courseEnrollmentData = JSON.parse(data);
+
+      // Remove student from course enrollments
+      if (courseEnrollmentData[course]) {
+        courseEnrollmentData[course] = courseEnrollmentData[course].filter((student: any) => student.id !== studentId);
+      }
+
+      // Write updated course enrollment data back to the file
+      fs.writeFileSync(courseEnrollmentFilePath, JSON.stringify(courseEnrollmentData, null, 2));
+
+      res.status(200).json({ message: 'Unenrollment successful' });
+    } catch (error) {
+      console.error('Error unenrolling student from course:', error);
+      res.status(500).json({ error: 'Failed to unenroll student from course' });
+    }
   } else {
-    res.setHeader('Allow', ['GET', 'POST']);
+    res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

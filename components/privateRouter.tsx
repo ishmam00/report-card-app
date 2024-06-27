@@ -3,13 +3,15 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 const PrivateRouter = ({ children }: { children: React.ReactNode }) => {
-  const studentAccess = ['/StudentDashboard', '/CourseEnrollment'];
-  const teacherAccess = ['/TeacherDashboard', '/CourseStudents', '/AddMarks'];
+  const studentAccess = ['/StudentDashboard', '/CourseEnrollment', '/'];
+  const teacherAccess = [
+    '/TeacherDashboard',
+    '/CourseStudents',
+    '/AddMarks',
+    '/',
+  ];
 
   const router = useRouter();
-
-  const [user] = useCurrentUser();
-  // console.log('User:', user);
 
   useEffect(() => {
     if (router.isReady) {
@@ -20,15 +22,13 @@ const PrivateRouter = ({ children }: { children: React.ReactNode }) => {
       } else {
         {
           if (
-            (userData.role == 'Student' &&
-              teacherAccess.includes(router.pathname)) ||
-            userData.role == 'Student'
+            userData.role == 'Student' &&
+            teacherAccess.includes(router.pathname)
           ) {
             router.push('/StudentDashboard');
           } else if (
-            (userData.role == 'Teacher' &&
-              studentAccess.includes(router.pathname)) ||
-            userData.role == 'Teacher'
+            userData.role == 'Teacher' &&
+            studentAccess.includes(router.pathname)
           ) {
             router.push('/TeacherDashboard');
           }

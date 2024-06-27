@@ -4,6 +4,17 @@ import useCurrentUser from '@/hooks/useCurrentUser';
 import { Course } from './CourseEnrollment';
 import PrivateRouter from '@/components/privateRouter';
 import convertMarksToGrade from '../utils/convertMarksToGrade';
+import {
+  BarChart,
+  Bar,
+  Rectangle,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 
 interface StudentResult {
   courseName: string;
@@ -17,6 +28,7 @@ const StudentDashboard = () => {
   const [loading, setLoading] = useState(false);
 
   const [user] = useCurrentUser();
+  // const userDataString = localStorage.getItem('user');
 
   const fetchEnrolledCourses = async () => {
     setLoading(true);
@@ -72,7 +84,6 @@ const StudentDashboard = () => {
 
   const getGradeForCourse = (courseName: string) => {
     const result = results.find((r) => r.courseName === courseName);
-    // console.log('Result:', result);
     if (result && result.mark !== undefined) {
       return convertMarksToGrade(result.mark);
     }
@@ -90,77 +101,76 @@ const StudentDashboard = () => {
 
   return (
     <PrivateRouter>
-    <div className="flex h-screen bg-gray-100">
-      {/* Side Panel */}
-      <div className="bg-gray-100 shadow-md w-64 flex flex-col p-4">
-        <h2 className="text-gray-700 text-lg font-bold mb-4">Actions</h2>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 mb-4 rounded focus:outline-none focus:shadow-outline"
-          onClick={handleEnrollment}
-        >
-          Enroll in Courses
-        </button>
-      </div>
+      <div className="flex h-screen bg-gray-100">
+        {/* Side Panel */}
+        <div className="bg-gray-100 shadow-md w-64 flex flex-col p-4">
+          <h2 className="text-gray-700 text-lg font-bold mb-4">Actions</h2>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 mb-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={handleEnrollment}
+          >
+            Course Management
+          </button>
+        </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col justify-center items-center">
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full h-full">
-          <h1 className="text-gray-700 text-2xl mb-4">Student Dashboard</h1>
-          <h1 className="text-gray-700 text-lg mb-4">
-            Welcome, <strong>{user.name}</strong>
-          </h1>
-          {loading ? (
-            <p className="text-gray-700">Loading...</p>
-          ) : (
-            <>
-              <h2 className="text-gray-700 text-lg my-4">Enrolled Courses:</h2>
-              {courses.length > 0 && courses[0] != null ? (
-                <div className="overflow-x-auto w-full">
-                  <table className="min-w-full bg-white border">
-                    <thead>
-                      <tr>
-                        {Object.keys(courses[0]).map((key) => (
-                          <th
-                            key={key}
-                            className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700"
-                          >
-                            {key.charAt(0).toUpperCase() + key.slice(1)}
-                          </th>
-                        ))}
-                        <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
-                          Grade
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {courses.map((course, index) => (
-                        <tr key={index}>
-                          {Object.keys(course).map((key) => (
-                            <td
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col justify-center items-center">
+          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full h-full">
+            <h1 className="text-gray-700 text-2xl mb-4">Student Dashboard</h1>
+            {loading ? (
+              <p className="text-gray-700">Loading...</p>
+            ) : (
+              <>
+                <h2 className="text-gray-700 text-lg my-4">
+                  Enrolled Courses:
+                </h2>
+                {courses.length > 0 && courses[0] != null ? (
+                  <div className="overflow-x-auto w-full">
+                    <table className="min-w-full bg-white border">
+                      <thead>
+                        <tr>
+                          {Object.keys(courses[0]).map((key) => (
+                            <th
                               key={key}
-                              className="py-2 px-4 border-b text-gray-700"
+                              className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700"
                             >
-                              {course[key as keyof Course]}
-                            </td>
+                              {key.charAt(0).toUpperCase() + key.slice(1)}
+                            </th>
                           ))}
-                          <td className="py-2 px-4 border-b text-gray-700">
-                            {getGradeForCourse(course.name)}
-                          </td>
+                          <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                            Grade
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className="text-gray-700">
-                  There are no enrolled courses at the moment.
-                </div>
-              )}
-            </>
-          )}
+                      </thead>
+                      <tbody>
+                        {courses.map((course, index) => (
+                          <tr key={index}>
+                            {Object.keys(course).map((key) => (
+                              <td
+                                key={key}
+                                className="py-2 px-4 border-b text-gray-700"
+                              >
+                                {course[key as keyof Course]}
+                              </td>
+                            ))}
+                            <td className="py-2 px-4 border-b text-gray-700">
+                              {getGradeForCourse(course.name)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="text-gray-700">
+                    There are no enrolled courses at the moment.
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </PrivateRouter>
   );
 };

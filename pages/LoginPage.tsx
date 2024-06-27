@@ -2,6 +2,7 @@ import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import privateRouter from '@/components/privateRouter';
 import useCurrentUser from '@/hooks/useCurrentUser';
+import { ViewIcon, ViewOffIcon } from 'hugeicons-react';
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
@@ -46,7 +47,7 @@ const LoginPage: React.FC = () => {
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-1/3"
         onSubmit={handleLogin}
       >
-        <h2 className="text-2xl mb-4">Log In</h2>
+        <h2 className="text-2xl mb-4 text-gray-700">Log In</h2>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <div className="mb-4">
           <label
@@ -56,7 +57,7 @@ const LoginPage: React.FC = () => {
             Email
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
             id="email"
             type="email"
             placeholder="johndoe@gmail.com"
@@ -73,7 +74,7 @@ const LoginPage: React.FC = () => {
           </label>
           <div className="flex">
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 focus:outline-none focus:shadow-outline"
               id="password"
               type={isPasswordShow ? 'text' : 'password'}
               placeholder="Password"
@@ -85,7 +86,7 @@ const LoginPage: React.FC = () => {
               className="text-gray-700 ml-2"
               onClick={() => setPasswordShow(!isPasswordShow)}
             >
-              Show
+              {isPasswordShow ? <ViewOffIcon /> : <ViewIcon />}
             </button>
           </div>
         </div>

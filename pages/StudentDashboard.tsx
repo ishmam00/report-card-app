@@ -28,7 +28,6 @@ const StudentDashboard = () => {
   const [loading, setLoading] = useState(false);
 
   const [user] = useCurrentUser();
-  // const userDataString = localStorage.getItem('user');
 
   const fetchEnrolledCourses = async () => {
     setLoading(true);

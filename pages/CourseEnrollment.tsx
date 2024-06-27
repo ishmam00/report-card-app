@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import PrivateRouter from '@/components/privateRouter';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 export interface Course {
   id: number;
@@ -9,6 +10,7 @@ export interface Course {
   description?: string;
   instructor?: string;
   studentCount?: number;
+  hasGrade?: boolean;
 }
 
 const CourseEnrollment: React.FC = () => {
@@ -20,6 +22,8 @@ const CourseEnrollment: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'enrolled' | 'available'>(
     'enrolled'
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [courseToUnenroll, setCourseToUnenroll] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -88,7 +92,14 @@ const CourseEnrollment: React.FC = () => {
     }
   };
 
-  const handleUnenroll = async (courseName: string) => {
+  const handleUnenrollClick = (courseName: string) => {
+    setCourseToUnenroll(courseName);
+    setIsModalOpen(true);
+  };
+
+  const handleUnenroll = async () => {
+    if (!courseToUnenroll) return;
+
     try {
       const userDataString = localStorage.getItem('user');
       if (!userDataString) {
@@ -102,7 +113,7 @@ const CourseEnrollment: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          course: courseName,
+          course: courseToUnenroll,
           studentId: userData.id,
         }),
       });
@@ -115,6 +126,9 @@ const CourseEnrollment: React.FC = () => {
       }
     } catch (error) {
       console.error('Error unenrolling from course:', error);
+    } finally {
+      setIsModalOpen(false);
+      setCourseToUnenroll(null);
     }
   };
 
@@ -204,8 +218,8 @@ const CourseEnrollment: React.FC = () => {
                           <td className="py-2 px-4 border-b text-gray-700">
                             <button
                               className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                              type="button"
-                              onClick={() => handleUnenroll(course.name)}
+                              onClick={() => handleUnenrollClick(course.name)}
+                              disabled={course.hasGrade}
                             >
                               Unenroll
                             </button>
@@ -218,7 +232,7 @@ const CourseEnrollment: React.FC = () => {
                           (course) =>
                             !enrolledCourses.some(
                               (enrolledCourse) =>
-                                enrolledCourse.name === course.name
+                                enrolledCourse.id === course.id
                             )
                         )
                         .map((course) => (
@@ -266,6 +280,12 @@ const CourseEnrollment: React.FC = () => {
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleUnenroll}
+        message="Do you wish to unenroll?"
+      />
     </PrivateRouter>
   );
 };

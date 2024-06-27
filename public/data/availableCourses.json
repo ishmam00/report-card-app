@@ -34,5 +34,11 @@
     "name": "Computer Science",
     "description": "Introduction to Computer Science",
     "instructor": "Prof. Andrew Zisserman"
+  },
+  {
+    "id": 7,
+    "name": "Economics",
+    "description": "Introduction to Economics",
+    "instructor": "Prof. Jim Bain"
   }
 ]

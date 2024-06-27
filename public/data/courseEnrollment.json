@@ -4,6 +4,10 @@
       "name": "Michael Thompson",
       "id": 3,
       "mark": 80
+    },
+    {
+      "name": "David Rodriguez",
+      "id": 1
     }
   ],
   "Computer Science and Engineering": [
@@ -16,7 +20,12 @@
   "Computer Science": [
     {
       "name": "Michael Thompson",
-      "id": 3
+      "id": 3,
+      "mark": 90
+    },
+    {
+      "name": "David Rodriguez",
+      "id": 1
     }
   ],
   "English": [
@@ -27,15 +36,39 @@
     {
       "name": "Fatima Ali",
       "id": 5
+    },
+    {
+      "name": "Issac Mays",
+      "id": 12,
+      "mark": 90
+    },
+    {
+      "name": "Michael Thompson",
+      "id": 3
     }
   ],
   "Science": [
     {
       "name": "David Rodriguez",
       "id": 1
+    },
+    {
+      "name": "Issac Mays",
+      "id": 12,
+      "mark": 75
     }
   ],
   "Mathematics": [
+    {
+      "name": "Fatima Ali",
+      "id": 5
+    },
+    {
+      "name": "Issac Mays",
+      "id": 12
+    }
+  ],
+  "Economics": [
     {
       "name": "Fatima Ali",
       "id": 5

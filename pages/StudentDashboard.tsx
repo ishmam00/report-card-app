@@ -4,17 +4,6 @@ import useCurrentUser from '@/hooks/useCurrentUser';
 import { Course } from './CourseEnrollment';
 import PrivateRouter from '@/components/privateRouter';
 import convertMarksToGrade from '../utils/convertMarksToGrade';
-import {
-  BarChart,
-  Bar,
-  Rectangle,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
 
 interface StudentResult {
   courseName: string;

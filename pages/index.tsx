@@ -21,7 +21,7 @@ const Home = () => {
   return (
     <PrivateRouter>
       <main>
-        <div className="flex justify-center text-gray-700 mb-3">Welcome</div>
+        <div className="flex justify-center text-gray-700 mb-3">Loading...</div>
       </main>
     </PrivateRouter>
   );

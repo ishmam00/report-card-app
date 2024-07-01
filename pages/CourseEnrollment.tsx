@@ -217,9 +217,12 @@ const CourseEnrollment: React.FC = () => {
                           </td>
                           <td className="py-2 px-4 border-b text-gray-700">
                             <button
-                              className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                              className={`font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+                                course.hasGrade
+                                  ? 'bg-gray-400 cursor-not-allowed'
+                                  : 'bg-red-500 hover:bg-red-700 text-white'
+                              }`}
                               onClick={() => handleUnenrollClick(course.name)}
-                              disabled={course.hasGrade}
                             >
                               Unenroll
                             </button>

@@ -21,10 +21,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Filter courses based on student ID
       Object.keys(courseEnrollmentData).forEach(
         (course) => {
-          if (courseEnrollmentData[course].findIndex((student: any) => student.id == studentId) > -1) {
+          const enrolledStudent = courseEnrollmentData[course].find((student: any) => student.id == studentId);
+          if (enrolledStudent) {
             const result = availableCourses.find((availableCourse: Course) => availableCourse.name === course);
             if (result) {
-              matchingCourses.push(result);
+              matchingCourses.push({
+                ...result,
+                hasGrade: enrolledStudent.mark !== undefined
+              });
             }
           }
         }

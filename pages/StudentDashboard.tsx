@@ -128,14 +128,18 @@ const StudentDashboard = () => {
                     <table className="min-w-full bg-white border">
                       <thead>
                         <tr>
-                          {Object.keys(courses[0]).map((key) => (
-                            <th
-                              key={key}
-                              className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700"
-                            >
-                              {key.charAt(0).toUpperCase() + key.slice(1)}
-                            </th>
-                          ))}
+                          <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                            Id
+                          </th>
+                          <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                            Name
+                          </th>
+                          <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                            Description
+                          </th>
+                          <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                            Instructor
+                          </th>
                           <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
                             Grade
                           </th>
@@ -144,14 +148,18 @@ const StudentDashboard = () => {
                       <tbody>
                         {courses.map((course, index) => (
                           <tr key={index}>
-                            {Object.keys(course).map((key) => (
-                              <td
-                                key={key}
-                                className="py-2 px-4 border-b text-gray-700"
-                              >
-                                {course[key as keyof Course]}
-                              </td>
-                            ))}
+                            <td className="py-2 px-4 border-b text-gray-700">
+                              {course.id}
+                            </td>
+                            <td className="py-2 px-4 border-b text-gray-700">
+                              {course.name}
+                            </td>
+                            <td className="py-2 px-4 border-b text-gray-700">
+                              {course.description}
+                            </td>
+                            <td className="py-2 px-4 border-b text-gray-700">
+                              {course.instructor}
+                            </td>
                             <td className="py-2 px-4 border-b text-gray-700">
                               {getGradeForCourse(course.name)}
                             </td>

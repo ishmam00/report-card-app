@@ -18,7 +18,7 @@ const CourseEnrollment: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
   const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
-  const [user] = useCurrentUser();
+  const { user } = useCurrentUser();
   const [activeTab, setActiveTab] = useState<'enrolled' | 'available'>(
     'enrolled'
   );
@@ -42,7 +42,7 @@ const CourseEnrollment: React.FC = () => {
     }
   };
 
-  const fetchEnrolledCourses = async (studentId: string) => {
+  const fetchEnrolledCourses = async (studentId: number) => {
     try {
       const res = await fetch(`/api/enrolledCourses?studentId=${studentId}`);
       const data = await res.json();

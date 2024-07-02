@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 const Navbar = () => {
   const router = useRouter();
 
-  const [user] = useCurrentUser();
+  const { user } = useCurrentUser();
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -16,7 +16,7 @@ const Navbar = () => {
       <div className="flex items-center justify-end w-full gap-3">
         <div>
           <p className="text-gray-700">
-            <strong>{user.name}</strong>
+            <strong>{user?.name}</strong>
           </p>
         </div>
         <div>

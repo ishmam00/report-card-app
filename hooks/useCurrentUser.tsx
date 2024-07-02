@@ -12,7 +12,7 @@ export interface IUser {
 }
 
 export default function useCurrentUser() {
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setLoading] = useState(false);
 
   const getUserData = async () => {
@@ -27,5 +27,6 @@ export default function useCurrentUser() {
   useEffect(() => {
     getUserData();
   }, []);
-  return [user, isLoading];
+
+  return { user, isLoading };
 }

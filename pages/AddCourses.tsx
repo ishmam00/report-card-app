@@ -11,7 +11,7 @@ const AddCourses = () => {
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
   const [courses, setCourses] = useState<Course[]>([]);
-  const [user] = useCurrentUser();
+  const { user } = useCurrentUser();
 
   useEffect(() => {
     setCourses(availableCourses);

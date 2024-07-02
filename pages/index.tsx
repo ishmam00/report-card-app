@@ -7,7 +7,7 @@ import PrivateRouter from '@/components/privateRouter';
 
 const Home = () => {
   const router = useRouter();
-  const [user, isLoading] = useCurrentUser();
+  const { user, isLoading } = useCurrentUser();
 
   // useEffect(() => {
   //   console.log(isLoading);

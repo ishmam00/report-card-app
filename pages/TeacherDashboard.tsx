@@ -12,7 +12,7 @@ const TeacherDashboard = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const [user] = useCurrentUser();
+  const { user } = useCurrentUser();
 
   const fetchTaughtCourses = async () => {
     setLoading(true);
@@ -50,6 +50,10 @@ const TeacherDashboard = () => {
   const handleCourseClick = (courseName: string) => {
     router.push(`/CourseStudents?courseName=${courseName}`);
   };
+
+  // const handleAddCourses = () => {};
+
+  // console.log('Hello World');
 
   return (
     <PrivateRouter>

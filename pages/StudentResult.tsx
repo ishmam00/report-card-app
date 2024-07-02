@@ -15,7 +15,7 @@ const StudentResult = () => {
   const router = useRouter();
   const [results, setResults] = useState<StudentResult[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user] = useCurrentUser();
+  const { user } = useCurrentUser();
 
   useEffect(() => {
     if (user) fetchStudentResults();
@@ -46,57 +46,57 @@ const StudentResult = () => {
 
   return (
     <PrivateRouter>
-    <div className="flex h-screen bg-gray-100">
-      <div className="bg-gray-100 shadow-md w-64 flex flex-col p-4">
-        <h2 className="text-gray-700 text-lg font-bold mb-4">Actions</h2>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 mb-4 rounded focus:outline-none focus:shadow-outline"
-          onClick={() => router.push('/StudentDashboard')}
-        >
-          Back to Dashboard
-        </button>
-      </div>
+      <div className="flex h-screen bg-gray-100">
+        <div className="bg-gray-100 shadow-md w-64 flex flex-col p-4">
+          <h2 className="text-gray-700 text-lg font-bold mb-4">Actions</h2>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 mb-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={() => router.push('/StudentDashboard')}
+          >
+            Back to Dashboard
+          </button>
+        </div>
 
-      <div className="flex-1 flex flex-col justify-center items-center">
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full h-full">
-          <h1 className="text-gray-700 text-2xl mb-4">Student Results</h1>
-          {loading ? (
-            <p className="text-gray-700">Loading...</p>
-          ) : results.length > 0 ? (
-            <div className="overflow-x-auto w-full">
-              <table className="min-w-full bg-white border">
-                <thead>
-                  <tr>
-                    <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
-                      Course Name
-                    </th>
-                    <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
-                      Grade
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {results.map((result, index) => (
-                    <tr key={index}>
-                      <td className="py-2 px-4 border-b text-gray-700">
-                        {result.courseName}
-                      </td>
-                      <td className="py-2 px-4 border-b text-gray-700">
-                        {result.mark !== undefined
-                          ? convertMarksToGrade(result.mark)
-                          : 'N/A'}
-                      </td>
+        <div className="flex-1 flex flex-col justify-center items-center">
+          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full h-full">
+            <h1 className="text-gray-700 text-2xl mb-4">Student Results</h1>
+            {loading ? (
+              <p className="text-gray-700">Loading...</p>
+            ) : results.length > 0 ? (
+              <div className="overflow-x-auto w-full">
+                <table className="min-w-full bg-white border">
+                  <thead>
+                    <tr>
+                      <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                        Course Name
+                      </th>
+                      <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                        Grade
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="text-gray-700">No results available.</div>
-          )}
+                  </thead>
+                  <tbody>
+                    {results.map((result, index) => (
+                      <tr key={index}>
+                        <td className="py-2 px-4 border-b text-gray-700">
+                          {result.courseName}
+                        </td>
+                        <td className="py-2 px-4 border-b text-gray-700">
+                          {result.mark !== undefined
+                            ? convertMarksToGrade(result.mark)
+                            : 'N/A'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="text-gray-700">No results available.</div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </PrivateRouter>
   );
 };

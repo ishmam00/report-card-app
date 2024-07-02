@@ -85,8 +85,6 @@ const StudentDashboard = () => {
     }
   }, [user]);
 
-  // console.log('Hello World');
-
   return (
     <PrivateRouter>
       <div className="flex h-screen bg-gray-100">

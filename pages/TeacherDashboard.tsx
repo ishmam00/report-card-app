@@ -51,10 +51,6 @@ const TeacherDashboard = () => {
     router.push(`/CourseStudents?courseName=${courseName}`);
   };
 
-  // const handleAddCourses = () => {};
-
-  // console.log('Hello World');
-
   return (
     <PrivateRouter>
       <div className="flex h-screen bg-gray-100">

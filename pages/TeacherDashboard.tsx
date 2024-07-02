@@ -12,7 +12,23 @@ const TeacherDashboard = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const { user } = useCurrentUser();
+  const { user, isLoading } = useCurrentUser();
+
+  if (isLoading) {
+    return (
+      <PrivateRouter>
+        <main>
+          <div className="flex justify-center text-gray-700 mb-3">
+            Loading...
+          </div>
+        </main>
+      </PrivateRouter>
+    );
+  }
+  // else if (!user) {
+  //   router.push('/LoginPage');
+  //   return null;
+  // }
 
   const fetchTaughtCourses = async () => {
     setLoading(true);
@@ -32,7 +48,6 @@ const TeacherDashboard = () => {
             studentCount,
           };
         });
-      // console.log('Taught Courses: ', taughtCourses);
       setCourses(taughtCourses);
       setLoading(false);
     } catch (error) {
@@ -50,10 +65,6 @@ const TeacherDashboard = () => {
   const handleCourseClick = (courseName: string) => {
     router.push(`/CourseStudents?courseName=${courseName}`);
   };
-
-  // const handleAddCourses = () => {};
-
-  // console.log('Hello World');
 
   return (
     <PrivateRouter>

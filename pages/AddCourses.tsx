@@ -20,6 +20,10 @@ const AddCourses = () => {
   const handleAddCourse = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!user) {
+      throw Error('User not found');
+    }
+
     if (!name.trim() || !description.trim()) {
       setError('Please fill in all fields');
       return;

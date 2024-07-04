@@ -11,7 +11,7 @@ const TeacherDashboard = () => {
   const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(false);
-
+  const [enrollmentRequests, setEnrollmentRequests] = useState<any[]>([]);
   const { user, isLoading } = useCurrentUser();
 
   if (isLoading) {
@@ -25,15 +25,14 @@ const TeacherDashboard = () => {
       </PrivateRouter>
     );
   }
-  // else if (!user) {
+  // if (!user && router.isReady) {
   //   router.push('/LoginPage');
-  //   return null;
   // }
 
   const fetchTaughtCourses = async () => {
     setLoading(true);
     try {
-      const instructorName = user.name;
+      const instructorName = user?.name;
       const taughtCourses = availableCourses
         .filter(
           (course: Course) =>
@@ -56,15 +55,63 @@ const TeacherDashboard = () => {
     }
   };
 
+  const fetchEnrollmentRequests = async () => {
+    try {
+      const res = await fetch('/data/enrollmentRequests.json');
+      const data = await res.json();
+      const instructorName = user?.name;
+
+      const pendingRequests = data.filter((course: any) => {
+        const replacedInstructorName = (
+          course.course.instructor.replace('Prof. ', '') as string
+        ).toLowerCase();
+        if (
+          replacedInstructorName === instructorName?.toLowerCase() &&
+          course.status === 'pending'
+        )
+          return course;
+      });
+      setEnrollmentRequests(pendingRequests);
+    } catch (error) {
+      console.error('Error fetching enrollment requests:', error);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       fetchTaughtCourses();
+      fetchEnrollmentRequests();
     }
   }, [user]);
 
   const handleCourseClick = (courseName: string) => {
     router.push(`/CourseStudents?courseName=${courseName}`);
   };
+
+  const handleEnrollmentRequest = async (
+    requestId: number,
+    status: 'approved' | 'rejected'
+  ) => {
+    try {
+      const res = await fetch('/api/handleEnrollmentRequest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ requestId, status }),
+      });
+
+      if (res.ok) {
+        fetchEnrollmentRequests(); // Refresh requests
+      } else {
+        throw new Error('Failed to handle enrollment request');
+      }
+    } catch (error) {
+      console.error('Error handling enrollment request:', error);
+    }
+  };
+
+  console.log('Enrollment requests:', enrollmentRequests);
 
   return (
     <PrivateRouter>
@@ -138,6 +185,70 @@ const TeacherDashboard = () => {
                       You are not teaching any courses at the moment.
                     </div>
                   )}
+                </div>
+              )}
+
+              <h2 className="text-lg mb-2 text-gray-700 mt-4">
+                Enrollment Requests:
+              </h2>
+              {enrollmentRequests.length > 0 ? (
+                <div className="overflow-x-auto w-full">
+                  <table className="min-w-full bg-white border">
+                    <thead>
+                      <tr>
+                        <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                          Student
+                        </th>
+                        <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                          Course
+                        </th>
+                        <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                          Status
+                        </th>
+                        <th className="py-2 px-4 bg-gray-200 border-b text-left text-gray-700">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {enrollmentRequests.map((request) => (
+                        <tr key={request.id}>
+                          <td className="py-2 px-4 border-b text-gray-700">
+                            {request.student.name}
+                          </td>
+                          <td className="py-2 px-4 border-b text-gray-700">
+                            {request.course.name}
+                          </td>
+                          <td className="py-2 px-4 border-b text-gray-700">
+                            {request.status.charAt(0).toUpperCase() +
+                              request.status.slice(1)}
+                          </td>
+                          <td className="py-2 px-4 border-b text-gray-700">
+                            <button
+                              className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                              onClick={() =>
+                                handleEnrollmentRequest(request.id, 'approved')
+                              }
+                            >
+                              Approve
+                            </button>
+                            <button
+                              className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
+                              onClick={() =>
+                                handleEnrollmentRequest(request.id, 'rejected')
+                              }
+                            >
+                              Reject
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-gray-700">
+                  No pending enrollment requests at the moment.
                 </div>
               )}
             </div>

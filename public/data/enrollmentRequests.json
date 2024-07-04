@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "student": {
+      "name": "Michael Thompson",
+      "id": 3
+    },
+    "course": {
+      "id": 2,
+      "name": "Science",
+      "description": "Introduction to Science",
+      "instructor": "Prof. Albert Johnson"
+    },
+    "status": "approved"
+  },
+  {
+    "id": 2,
+    "student": {
+      "name": "Michael Thompson",
+      "id": 3
+    },
+    "course": {
+      "id": 4,
+      "name": "Business",
+      "description": "Introduction to Business",
+      "instructor": "Prof. Clayton Christensen"
+    },
+    "status": "pending"
+  }
+]

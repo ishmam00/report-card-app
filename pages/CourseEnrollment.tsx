@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import PrivateRouter from '@/components/privateRouter';
 import ConfirmationModal from '@/components/ConfirmationModal';
+import Modal from '@/components/Modal';
 
 export interface Course {
   id: number;
@@ -24,6 +25,7 @@ const CourseEnrollment: React.FC = () => {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [courseToUnenroll, setCourseToUnenroll] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -62,7 +64,38 @@ const CourseEnrollment: React.FC = () => {
     }
   };
 
-  const handleEnroll = async () => {
+  // const handleEnroll = async () => {
+  // try {
+  // const userDataString = localStorage.getItem('user');
+  // if (!userDataString) {
+  //   throw new Error('User data not found in localStorage');
+  // }
+  // const userData = JSON.parse(userDataString);
+
+  //     const res = await fetch('/api/enrolledCourses', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         courses: selectedCourses,
+  //         student: { name: userData.name, id: userData.id },
+  //       }),
+  //     });
+
+  //     if (res.ok) {
+  //       setShowModal(true);
+  //       console.log('Enrollment successful');
+  //       fetchEnrolledCourses(userData.id); // Refresh enrolled courses
+  //     } else {
+  //       throw new Error('Failed to enroll in courses');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error enrolling in courses:', error);
+  //   }
+  // };
+
+  const handleEnrollRequest = async () => {
     try {
       const userDataString = localStorage.getItem('user');
       if (!userDataString) {
@@ -70,7 +103,7 @@ const CourseEnrollment: React.FC = () => {
       }
       const userData = JSON.parse(userDataString);
 
-      const res = await fetch('/api/enrolledCourses', {
+      const res = await fetch('/api/enrollRequest', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -82,13 +115,14 @@ const CourseEnrollment: React.FC = () => {
       });
 
       if (res.ok) {
-        console.log('Enrollment successful');
-        fetchEnrolledCourses(userData.id); // Refresh enrolled courses
+        setShowModal(true);
+        // fetchEnrolledCourses(userData.id); // Refresh enrolled courses
+        setSelectedCourses([]); // Clear selected courses after request
       } else {
-        throw new Error('Failed to enroll in courses');
+        throw new Error('Failed to send enrollment request');
       }
     } catch (error) {
-      console.error('Error enrolling in courses:', error);
+      console.error('Error sending enrollment request:', error);
     }
   };
 
@@ -155,7 +189,7 @@ const CourseEnrollment: React.FC = () => {
                     activeTab === 'enrolled'
                       ? 'bg-blue-500 text-white'
                       : 'bg-gray-200 text-gray-700'
-                  }`}
+                  } mr-2`}
                   onClick={() => setActiveTab('enrolled')}
                 >
                   Enrolled Courses
@@ -274,7 +308,7 @@ const CourseEnrollment: React.FC = () => {
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   type="button"
-                  onClick={handleEnroll}
+                  onClick={handleEnrollRequest}
                 >
                   Enroll
                 </button>
@@ -283,6 +317,12 @@ const CourseEnrollment: React.FC = () => {
           </div>
         </div>
       </div>
+      {showModal && (
+        <Modal
+          message="Request sent to the corresponding faculty"
+          onClose={() => setShowModal(false)}
+        />
+      )}
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

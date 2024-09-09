@@ -26,5 +26,19 @@
       "instructor": "Prof. Clayton Christensen"
     },
     "status": "pending"
+  },
+  {
+    "id": 3,
+    "student": {
+      "name": "Michael Thompson",
+      "id": 3
+    },
+    "course": {
+      "id": 7,
+      "name": "Economics",
+      "description": "Introduction to Economics",
+      "instructor": "Prof. Jim Bain"
+    },
+    "status": "approved"
   }
 ]
